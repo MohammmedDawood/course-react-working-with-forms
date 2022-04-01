@@ -1,30 +1,17 @@
 import React, { useState, useEffect } from "react";
 const SimpleInput = (props) => {
-  // const nameInputRef = useRef();useRef,
   const [enteredName, setEnteredName] = useState("");
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameWasTouched, setEnteredNameWasTouched] = useState(false);
 
-  useEffect(() => {
-    if (enteredNameIsValid) {
-      console.log("Name Input is Valid");
-    }
-  }, [enteredNameIsValid]);
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameWasTouched;
 
   const nameTnputChangeHandler = (event) => {
     setEnteredName(event.target.value);
-
-    if (event.target.value.trim() !== "") {
-      setEnteredNameIsValid(true);
-    }
   };
 
   const nameInputBlurHandler = (event) => {
     setEnteredNameWasTouched(true);
-
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
-    }
   };
 
   const formSubmissionHandler = (event) => {
@@ -32,19 +19,15 @@ const SimpleInput = (props) => {
 
     setEnteredNameWasTouched(true);
 
-    if (enteredName.trim() !== "") {
-      setEnteredNameIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
-    setEnteredNameIsValid(true);
     console.log(enteredName);
-    // const enteredValue = nameInputRef.current.value;
-    // console.log(enteredValue);
-    // clear the input
-    // nameInputRef.current.value = ""; //Not Ideal,don't do this dom manipulation
+
+    //reset states
     setEnteredName("");
+    setEnteredNameWasTouched(false);
   };
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameWasTouched;
   const nameInputClasses = nameInputIsInvalid
     ? "form-control  invalid"
     : "form-control";
@@ -53,7 +36,6 @@ const SimpleInput = (props) => {
       <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
-          // ref={nameInputRef}
           type="text"
           id="name"
           onChange={nameTnputChangeHandler}
